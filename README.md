@@ -27,7 +27,7 @@ U-Net implementation is based on [Seq-U-Net](https://github.com/f90/Seq-U-Net)
 
 ### Bio-Impedance Experiments 
 
-Please refer to this [paper](https://ieeexplore.ieee.org/stamp/stamp.jsp?arnumber=8863984&tag=1). 
+Please refer to this [paper](https://ieeexplore.ieee.org/document/8863984). 
 
 ## Evaluation
 
@@ -47,9 +47,10 @@ Please refer to this [paper](https://ieeexplore.ieee.org/stamp/stamp.jsp?arnumbe
 
 `arterialnet.yml` contains the conda environment used for our experiments.
 
-Other System specification:: 
+Some spceifications: 
 * Linux-based OS 
 * Python 3.9.15
+* conda 4.14.0
 * PyTorch 1.11.0
 * CUDA 11.4 or 11.6 (for GPU acceleration)
 
