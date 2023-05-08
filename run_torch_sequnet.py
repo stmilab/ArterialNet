@@ -22,7 +22,7 @@ sys.path.append("models/")
 from utils.arg_parser import sicong_argparse
 from utils.visual_combine import MIMIC_Visual
 import utils.seq2seq_utils as zu
-from models.sequnet import DilatedCNN, TransformerModel, Sequnet as SeqUNet
+from models.arterialnet import DilatedCNN, TransformerModel, Sequnet as SeqUNet
 from utils import torch_metrics
 
 sys.path.append("/home/grads/s/siconghuang/CufflessBP/bioz_processing")

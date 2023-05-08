@@ -22,9 +22,9 @@ sys.path.append("models/")
 from utils.arg_parser import sicong_argparse
 from utils.visual_combine import MIMIC_Visual
 import utils.seq2seq_utils as zu
-from models.sequnet import Sequnet as SeqUNet
-from models.sequnet import DilatedCNN
-from models.sequnet import TransformerModel
+from models.arterialnet import Sequnet as SeqUNet
+from models.arterialnet import DilatedCNN
+from models.arterialnet import TransformerModel
 from utils import torch_metrics, rex_utils as ru
 import run_torch_sequnet as base_sequnet
 
