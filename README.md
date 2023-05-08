@@ -1,5 +1,6 @@
 # ArterialNet: Arterial Blood Pressure Reconstruction
 This is the code Implementation for our BHI-2023 submission: `ArterialNet: Arterial Blood Pressure Reconstruction` {add link}. 
+Corresponding Author: [Sicong Huang](mailto:siconghuang@tamu.edu).
 ## Abstract
 Continuous arterial blood pressure (ABP) monitoring for hemodynamic monitoring is accurate but invasive. Peripheral pulsatile signals paired with deep learning (DL) reconstruct ABP noninvasively but underestimated derived physiological parameters such as systolic BP (SBP) and diastolic BP (DBP). ArterialNet takes a model-agnostic approach that extracts features from longer sequences, evaluates statistical characteristics via hybrid loss, and converges to population instead of any subject via subject-invariant regularization, thus provides elevated waveform reconstruction with accurate SBP/DBP estimation. ArterialNet reconstructed ABP with waveform root-mean-squared-error (RMSE) of 6.81 ± 1.94 mmHg, SBP RMSE of 7.20 ± 1.93 mmHg, and DBP RMSE of 5.26 ± 1.83 mmHg. The lower errors and significantly lower stand deviation prove ArterialNet’s superior reliability in continuous ABP waveform reconstruction. 
 ## Implementations
