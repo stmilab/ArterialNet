@@ -9,8 +9,8 @@ from arg_parser import sicong_argparse
 import seq2seq_utils as zu
 
 sys.path.append("/home/grads/s/siconghuang/MimicModels/seq2seq_MIMIC/")
-from models.sequnet import Sequnet as SeqUNet
-from models.sequnet import DilatedCNN
+from models.arterialnet import Sequnet as SeqUNet
+from models.arterialnet import DilatedCNN
 import torch_metrics
 from torch import optim
 
