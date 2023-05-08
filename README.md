@@ -23,7 +23,7 @@ U-Net implementation is based on [Seq-U-Net](https://github.com/f90/Seq-U-Net)
 
 ### MIMIC III Waveform Dataset
 
-`/utils/mimic_file_list.txt` contains the subjects used in the experiments of our paper submission.
+`/utils/mimic_file_list.txt` contains the selected subjects from our paper submission.
 
 ### Bio-Impedance Experiments 
 
