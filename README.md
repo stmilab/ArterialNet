@@ -53,7 +53,7 @@ Some spceifications:
 * Python 3.9.15
 * conda 4.14.0
 * PyTorch 1.11.0
-* CUDA 11.4 or 11.6 (for GPU acceleration)
+* CUDA 11.4 (for GPU acceleration)
 
 Download the repository and install the conda environment:
 
