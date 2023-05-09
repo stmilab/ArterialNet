@@ -26,7 +26,7 @@ from models.arterialnet import Sequnet as SeqUNet
 from models.arterialnet import DilatedCNN
 from models.arterialnet import TransformerModel
 from utils import torch_metrics, rex_utils as ru
-import run_torch_sequnet as base_sequnet
+import run_torch_transformer as base_sequnet
 
 
 warnings.filterwarnings("ignore")
