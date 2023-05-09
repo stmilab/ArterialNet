@@ -25,9 +25,6 @@ import utils.seq2seq_utils as zu
 from models.arterialnet import DilatedCNN, TransformerModel, Sequnet as SeqUNet
 from utils import torch_metrics
 
-sys.path.append("/home/grads/s/siconghuang/CufflessBP/bioz_processing")
-import sicong_util as su
-
 warnings.filterwarnings("ignore")
 
 
@@ -350,8 +347,8 @@ if __name__ == "__main__":
     print(zu.pretty_progress_bar("Loading data with MIMIC_dataloader"))
     x_train, y_train, x_test, y_test, flags = zu.MIMIC_dataloader(flags)
     # normalize data
-    x_norm = su.Sicong_Norm(x_train.detach())
-    y_norm = su.Sicong_Norm(y_train.detach())
+    x_norm = zu.Sicong_Norm(x_train.detach())
+    y_norm = zu.Sicong_Norm(y_train.detach())
     # define the UNet Model as the backbone of the dilated CNN
     print(zu.pretty_progress_bar("Initializing SeqUNet"))
     snet = SeqUNet(
@@ -396,13 +393,3 @@ if __name__ == "__main__":
         )
         torch.save(net, model_name)
         print("saving good results")
-    if flags.email_reminder:
-        su.email_func(
-            subject="sequnet_task_completed",
-            message=f"Sequence Task Completed with Commands\n{flags}",
-        )
-        print(
-            zu.pretty_progress_bar("Email sent, run_torch_sequnet.py Script Completed")
-        )
-    else:
-        print(zu.pretty_progress_bar("run_torch_sequnet.py Script Completed"))
