@@ -28,7 +28,8 @@ Command Line Input Steps:
 4. `conda activate arterialnet` activates the created conda environment you just created
 
 ## Code Implementations
-![Visual of ArterialNet Framework](figures/arterialnet-framework.jpg)
+
+![Visual of ArterialNet Framework](figures/arterialnet-small.png)
 
 ### ArterialNet Framework
 
