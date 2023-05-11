@@ -28,17 +28,25 @@ Command Line Input Steps:
 
 4. `conda activate arterialnet` activates the created conda environment you just created
 
-## Code Implementations
+## Framework Implementations
+ArterialNet has 3 major components:
+* Feature Extractor and backbone
+* Hybrid Loss Function
+* Subject-Invariant Regularization
 
 ![Visual of ArterialNet Framework](figures/arterialnet-small.png)
 
 ### ArterialNet Framework
 
-* `models/arterialnet.py` contains the implementation of our proposed ArterialNet framework along with the U-Net and Transformer backbone architectures.
-    * U-Net implementation is based on [Seq-U-Net](https://github.com/f90/Seq-U-Net) in Pytorch
+* `models/arterialnet.py` contains the Feature Extractor and Backbone of our proposed ArterialNet framework along with the U-Net and Transformer backbone architectures.
+    * U-Net implementation is modified from [Seq-U-Net](https://github.com/f90/Seq-U-Net) in Pytorch
     
     * Transformer implementation is based on [PyTorch Transformer](https://pytorch.org/docs/stable/generated/torch.nn.Transformer.html)
+* Hybrid Loss Function is implemented in a custom [`train_epoch()`](https://github.com/Innoversa/ArterialNet/blob/main/run_torch_sequnet.py#L55) function in `run_torch_sequnet.py` and `run_torch_transformer.py`
 
+* Subject-Invariant Regularization is implemented in a custom [rex_preprocess()](https://github.com/Innoversa/ArterialNet/blob/main/utils/rex_utils.py#L18) in `utils/rex_utils.py` and modified from [REx](https://github.com/capybaralet/REx_code_release)
+
+### Training and Testing
 * `python run_torch_sequnet_rex.py` runs the ArterialNet + U-Net model on MIMIC III Waveform Dataset (see below for more details)
 
 ### Experiment: ArterialNet + U-Net on MIMIC 
