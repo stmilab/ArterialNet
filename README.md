@@ -67,7 +67,7 @@ ArterialNet has 3 major components:
 
 * Select your cohort of patients and download. For example:  [mimic_file_list.txt](utils/mimic_file_list.txt)
 
-* Specify argument `--data_path` with your data path, otherwise change the default value in [arg_parser.py](utils/arg_parser.py)
+* Specify argument `--data_path` with your data path, otherwise change the default value in [arg_parser.py](https://github.com/Innoversa/ArterialNet/blob/main/utils/arg_parser.py#L59)
 
 
 ### Bio-Impedance Experiments 
