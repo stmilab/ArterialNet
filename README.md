@@ -73,8 +73,8 @@ Please refer to this [paper](https://ieeexplore.ieee.org/document/8863984).
     * Root Mean Squared Error (RMSE)
     * Mean Absolute Error (MAE)
     * Pearson's Correlation Coefficient (R)
-    * Waveform Reconstruction vs. reference plot
+    * Waveform Reconstruction vs. Reference Plot
 * SBP/DBP (all of above plus):
     * Bland-Altman Plots
     * Confusion Matrix of hypertension stages 
-    * SBP/DBP prediction vs. reference plots
+    * SBP/DBP Prediction vs. Reference Plots
