@@ -14,6 +14,7 @@ Our experiments are conducted on a Linux-based machine with the following specif
 * git 2.25.1
 * CUDA 11.4 or 11.6 (for GPU acceleration)
 
+
 We highly recommend you to use our shared conda environment (`arterialnet.yml`) we shared to avoid potential compatibility issue. To setup Conda for your computer, you can follow the instructions [here](https://conda.io/projects/conda/en/latest/user-guide/install/index.html).
 
 
