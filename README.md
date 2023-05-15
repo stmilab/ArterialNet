@@ -2,6 +2,10 @@
 This is the code Implementation for our BHI-2023 submission: `ArterialNet: Arterial Blood Pressure Reconstruction` {add link}. 
 Corresponding Author: [Sicong Huang](mailto:siconghuang@tamu.edu).
 
+## Description
+
+ArterialNet is a pre-training framework that can be paired with any deep learning sequence-to-sequence model for arterial blood pressure (ABP) reconstruction. Here we demonstrate the effectiveness of ArterialNet by pairing it with two different backbone architectures: U-Net and Transformer. We evaluated ArterialNet on the MIMIC III Waveform Dataset and showed improved performance on both U-Net and Transformer backbones. Please refer to our BHI submission {add link} for full details. 
+
 ## Prerequisites
 
 ### Setup Environment
@@ -44,7 +48,7 @@ ArterialNet has 3 major components:
     * Transformer implementation is based on [PyTorch Transformer](https://pytorch.org/docs/stable/generated/torch.nn.Transformer.html)
 * Hybrid Loss Function is implemented in a custom [`train_epoch()`](https://github.com/Innoversa/ArterialNet/blob/main/run_torch_sequnet.py#L55) function in `run_torch_sequnet.py` and `run_torch_transformer.py`
 
-* Subject-Invariant Regularization is implemented in a custom [rex_preprocess()](https://github.com/Innoversa/ArterialNet/blob/main/utils/rex_utils.py#L18) in `utils/rex_utils.py` and modified from [REx](https://github.com/capybaralet/REx_code_release)
+* Subject-Invariant Regularization is implemented in a custom [`rex_preprocess()`](https://github.com/Innoversa/ArterialNet/blob/main/utils/rex_utils.py#L18) in `utils/rex_utils.py` and modified from [REx](https://github.com/capybaralet/REx_code_release)
 
 ### Training and Testing
 * `python run_torch_sequnet_rex.py` runs the ArterialNet + U-Net model on MIMIC III Waveform Dataset (see below for more details)
@@ -65,9 +69,9 @@ ArterialNet has 3 major components:
 
 * You can request and download MIMIC-III Waveform from [here](https://physionet.org/content/mimiciii/1.4/).
 
-* Select your cohort of patients and download. For example:  [mimic_file_list.txt](utils/mimic_file_list.txt)
+* Select your cohort of patients and download. For example:  [`mimic_file_list.txt`](utils/mimic_file_list.txt)
 
-* Specify argument `--data_path` with your data path, otherwise change the default value in [arg_parser.py](https://github.com/Innoversa/ArterialNet/blob/main/utils/arg_parser.py#L59)
+* Specify argument `--data_path` with your data path, otherwise change the default value in [`arg_parser.py`](https://github.com/Innoversa/ArterialNet/blob/main/utils/arg_parser.py#L59)
 
 
 ### Bio-Impedance Experiments 
