@@ -1,0 +1,36 @@
+batch_size:
+  distribution: categorical
+  values:
+    - 4
+    - 64
+epochs:
+  distribution: int_uniform
+  max: 195
+  min: 45
+lr:
+  distribution: categorical
+  values:
+    - 0.001
+    - 0.0001
+num_prev_beats:
+  distribution: int_uniform
+  max: 9
+  min: 0
+use_batchnorm:
+  distribution: categorical
+  values:
+    - true
+    - false
+use_pretrain_arterialnet:
+  value: [your pretrained framework] or none
+weight_decay:
+  distribution: categorical
+  values:
+    - 0
+    - 0.001
+    - 0.0001
+dropout_rate:
+  distribution: categorical
+  values:
+    - 0
+    - 0.2

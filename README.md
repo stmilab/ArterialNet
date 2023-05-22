@@ -32,7 +32,7 @@ Command Line Input Steps:
 
 4. `conda activate arterialnet` activates the created conda environment you just created
 
-## Framework Implementations
+## Implementations
 ArterialNet has 3 major components:
 * Feature Extractor and backbone
 * Hybrid Loss Function
@@ -53,21 +53,26 @@ ArterialNet has 3 major components:
 ### Training and Testing
 * `python run_torch_sequnet_rex.py` runs the ArterialNet + U-Net model on MIMIC III Waveform Dataset (see below for more details)
 
-### Experiment: ArterialNet + U-Net on MIMIC 
+#### Experiment: ArterialNet + U-Net on MIMIC 
 `run_torch_sequnet_rex.py` is the implementation of ArterialNet with U-Net as backbone on reconstructing ABP for MIMIC patients
 
 `run_torch_sequnet.py` is the base version without subject-invariant regularization 
-### Experiment: ArterialNet + Transformer on MIMIC 
+#### Experiment: ArterialNet + Transformer on MIMIC 
 `run_torch_transformer_rex.py` is the implementation of ArterialNet with Transformer as backbone on reconstructing ABP for MIMIC patients
 
 `run_torch_transformer.py` is the base version without subject-invariant regularization 
 
+### Hyperparameter Tuning
+
+Hyperparameter Tuning scope for MIMIC is here: [`mimic_hyperparam.txt`](exp_setup/mimic_hyperparam.txt)
+
+Hyperparameter Tuning scope for BioZ is here: [`bioz_hyperparam.txt`](exp_setup/bioz_hyperparam.txt)
 ## Datasets
 
 ### MIMIC III Waveform Dataset
 
 
-* You can request and download MIMIC-III Waveform from [here](https://physionet.org/content/mimiciii/1.4/).
+* You can request and download MIMIC-III ICU Waveform from [here](https://physionet.org/content/mimiciii/1.4/).
 
 * Select your cohort of patients and download. For example:  [`mimic_file_list.txt`](utils/mimic_file_list.txt)
 

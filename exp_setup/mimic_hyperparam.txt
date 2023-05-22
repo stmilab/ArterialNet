@@ -1,0 +1,46 @@
+batch_size:
+  distribution: categorical
+  values:
+    - 512
+    - 256
+    - 128
+    - 64
+epochs:
+  distribution: categorical
+  values:
+    - 125
+    - 75
+    - 325
+    - 175
+l2_regularizer_weight:
+  distribution: categorical
+  values:
+    - 0.01
+    - 0.001
+    - 0.0001
+lr:
+  distribution: categorical
+  values:
+    - 1e-3
+    - 5e-4
+    - 1e-4
+    - 5e-4
+    - 1e-5
+n_restarts:
+  value: 3
+penalty_weight:
+  distribution: categorical
+  values:
+    - 10000
+    - 1000
+    - 100
+    - 0
+run_portion:
+  value: 1
+sel_gpu:
+  value: 2
+shuffle_data:
+  distribution: categorical
+  values:
+    - "true"
+    - "false"
