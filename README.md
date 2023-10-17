@@ -24,7 +24,7 @@ We highly recommend you to use our shared conda environment (`arterialnet.yml`) 
 
 Command Line Input Steps: 
 
-1. `git pull https://github.com/Innoversa/ArterialNet.git` clones the repository to your local machine
+1. `git pull https://github.com/stmilab/ArterialNet.git` clones the repository to your local machine
 
 2. `cd ArterialNet/` changes the directory to the repository
 
@@ -46,9 +46,9 @@ ArterialNet has 3 major components:
     * U-Net implementation is modified from [Seq-U-Net](https://github.com/f90/Seq-U-Net) in Pytorch
     
     * Transformer implementation is based on [PyTorch Transformer](https://pytorch.org/docs/stable/generated/torch.nn.Transformer.html)
-* Hybrid Loss Function is implemented in a custom [`train_epoch()`](https://github.com/Innoversa/ArterialNet/blob/main/run_torch_sequnet.py#L55) function in `run_torch_sequnet.py` and `run_torch_transformer.py`
+* Hybrid Loss Function is implemented in a custom [`train_epoch()`](https://github.com/stmilab/ArterialNet/blob/main/run_torch_sequnet.py#L55) function in `run_torch_sequnet.py` and `run_torch_transformer.py`
 
-* Subject-Invariant Regularization is implemented in a custom [`rex_preprocess()`](https://github.com/Innoversa/ArterialNet/blob/main/utils/rex_utils.py#L18) in `utils/rex_utils.py` and modified from [REx](https://github.com/capybaralet/REx_code_release)
+* Subject-Invariant Regularization is implemented in a custom [`rex_preprocess()`](https://github.com/stmilab/ArterialNet/blob/main/utils/rex_utils.py#L18) in `utils/rex_utils.py` and modified from [REx](https://github.com/capybaralet/REx_code_release)
 
 ### Training and Testing
 * `python run_torch_sequnet_rex.py` runs the ArterialNet + U-Net model on MIMIC III Waveform Dataset (see below for more details)
@@ -76,7 +76,7 @@ Hyperparameter Tuning scope for BioZ is here: [`bioz_hyperparam.txt`](exp_setup/
 
 * Select your cohort of patients and download. For example:  [`mimic_file_list.txt`](utils/mimic_file_list.txt)
 
-* Specify argument `--data_path` with your data path, otherwise change the default value in [`arg_parser.py`](https://github.com/Innoversa/ArterialNet/blob/main/utils/arg_parser.py#L59)
+* Specify argument `--data_path` with your data path, otherwise change the default value in [`arg_parser.py`](https://github.com/stmilab/ArterialNet/blob/main/utils/arg_parser.py#L59)
 
 
 ### Bio-Impedance Experiments 
