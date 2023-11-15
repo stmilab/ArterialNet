@@ -1,7 +1,7 @@
 # ArterialNet: Arterial Blood Pressure Reconstruction
 This is the code Implementation for our accepted IEEE BHI-2023 manuscript: `ArterialNet: Arterial Blood Pressure Reconstruction`.
 
-Link to BHI [preprints]([https://bhiconference.github.io/BHI2023/](https://bhiconference.github.io/BHI2023/2023/pdfs/1570917245.pdf))
+Link to BHI [preprints](https://bhiconference.github.io/BHI2023/](https://bhiconference.github.io/BHI2023/2023/pdfs/1570917245.pdf).
 
 Corresponding Author: [Sicong Huang](mailto:siconghuang@tamu.edu).
 
