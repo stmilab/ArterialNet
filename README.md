@@ -22,7 +22,7 @@ Our experiments are conducted on a Linux-based machine with the following specif
 * CUDA 11.4 or 11.6 (for GPU acceleration)
 
 
-We highly recommend you to use our shared conda environment (`arterialnet.yml`) we shared to avoid potential compatibility issue. To setup Conda for your computer, you can follow the instructions [here](https://conda.io/projects/conda/en/latest/user-guide/install/index.html).
+We highly recommend you to use the conda environment (`arterialnet.yml`) we shared to avoid potential compatibility issues. To set up Conda for your computer, you can follow the official instructions [here](https://conda.io/projects/conda/en/latest/user-guide/install/index.html).
 
 
 Command Line Input Steps: 
@@ -31,7 +31,7 @@ Command Line Input Steps:
 
 2. `cd ArterialNet/` changes the directory to the repository
 
-3. `conda env create -f arterialnet.yml` creates a new conda environment same as ours (`arterialnet.yml` contains the packages used for our experiments.)
+3. `conda env create -f arterialnet.yml` creates a new conda environment the same as ours (`arterialnet.yml` contains the packages used for our experiments.)
 
 4. `conda activate arterialnet` activates the created conda environment you just created
 
@@ -57,11 +57,11 @@ ArterialNet has 3 major components:
 * `python run_torch_sequnet_rex.py` runs the ArterialNet + U-Net model on MIMIC III Waveform Dataset (see below for more details)
 
 #### Experiment: ArterialNet + U-Net on MIMIC 
-`run_torch_sequnet_rex.py` is the implementation of ArterialNet with U-Net as backbone on reconstructing ABP for MIMIC patients
+`run_torch_sequnet_rex.py` is the implementation of ArterialNet with U-Net as the backbone for reconstructing ABP for MIMIC patients
 
 `run_torch_sequnet.py` is the base version without subject-invariant regularization 
 #### Experiment: ArterialNet + Transformer on MIMIC 
-`run_torch_transformer_rex.py` is the implementation of ArterialNet with Transformer as backbone on reconstructing ABP for MIMIC patients
+`run_torch_transformer_rex.py` is the implementation of ArterialNet with Transformer as the backbone for reconstructing ABP for MIMIC patients
 
 `run_torch_transformer.py` is the base version without subject-invariant regularization 
 
@@ -75,7 +75,7 @@ Hyperparameter Tuning scope for BioZ is here: [`bioz_hyperparam.txt`](exp_setup/
 ### MIMIC III Waveform Dataset
 
 
-* You can request and download MIMIC-III ICU Waveform from [here](https://physionet.org/content/mimiciii/1.4/).
+* You can request and download the MIMIC-III ICU Waveform from [here](https://physionet.org/content/mimiciii/1.4/).
 
 * Select your cohort of patients and download. For example:  [`mimic_file_list.txt`](utils/mimic_file_list.txt)
 
@@ -88,14 +88,14 @@ Please refer to this [paper](https://ieeexplore.ieee.org/document/8863984).
 
 ## Evaluation
 
-`utils/visual_combine.py` has the following evaluation metrics implemented and ready to used:
+`utils/visual_combine.py` has the following evaluation metrics implemented and ready to be used:
 
 * ABP Waveform: 
     * Root Mean Squared Error (RMSE)
     * Mean Absolute Error (MAE)
     * Pearson's Correlation Coefficient (R)
     * Waveform Reconstruction vs. Reference Plot
-* SBP/DBP (all of above plus):
+* SBP/DBP (all of the above plus):
     * Bland-Altman Plots
     * Confusion Matrix of hypertension stages 
     * SBP/DBP Prediction vs. Reference Plots
