@@ -1,7 +1,6 @@
 import argparse
 import sys
 
-sys.path.append("/home/grads/s/siconghuang/CufflessBP/bioz_processing")
 import sicong_util as su
 
 sys.path.append("utils/")
