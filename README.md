@@ -1,3 +1,5 @@
+_This branch pertains the imeplemntation of the accepted version. For the implementation of the extension manuscript that is currently under review, please refer to the `arterialnet+` branch._
+
 # ArterialNet: Arterial Blood Pressure Reconstruction
 This is the code Implementation for our accepted IEEE BHI-2023 manuscript: `ArterialNet: Arterial Blood Pressure Reconstruction`.
 
