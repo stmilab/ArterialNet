@@ -13,7 +13,6 @@ from sklearn.preprocessing import StandardScaler
 from scipy.signal import find_peaks, peak_prominences
 from torch import optim
 from tqdm import tqdm
-from scipy.stats import skew
 import warnings
 
 # importing my own utility functions
@@ -22,34 +21,13 @@ sys.path.append("models/")
 from utils.arg_parser import sicong_argparse
 from utils.visual_combine import MIMIC_Visual
 import utils.seq2seq_utils as zu
-from models.arterialnet import DilatedCNN, TransformerModel, Sequnet as SeqUNet
+from models.sequnet import Sequnet as SeqUNet
+from models.arterialnet import ArterialNet
+from models.transformer_model import TransformerModel
+import utils.morph_utils as mu
 from utils import torch_metrics
 
 warnings.filterwarnings("ignore")
-
-
-def calc_stat_labels(y_arr: torch.Tensor) -> torch.Tensor:
-    """calc_stat_labels computes statistical labels for the given waveform arrays
-
-    Arguments:
-        y_arr {torch.Tensor} -- The waveform array used to extract statistical labels
-
-    Returns:
-        torch.Tensor -- Array of in the order of [skewness, mean, min, max, std]
-    """
-    # Making labels
-    with torch.no_grad():
-        stats_list = [
-            [
-                skew(y_arr[i, 0, :].reshape(-1)),  # skewness
-                y_arr[i, 0, :].reshape(-1).mean(),  # mean
-                y_arr[i, 0, :].reshape(-1).min(),  # min
-                y_arr[i, 0, :].reshape(-1).max(),  # max
-                y_arr[i, 0, :].reshape(-1).std(),  # std
-            ]
-            for i in range(len(y_arr))
-        ]
-    return torch.Tensor(stats_list).view(len(stats_list), 1, len(stats_list[-1]))
 
 
 def train_epoch(
@@ -88,9 +66,8 @@ def train_epoch(
     entire_epoch_preds = torch.Tensor([])
     with torch.no_grad():
         normalized_x_train = x_norm.normalize(x_train)
-    for i in range(0, len(x_train) - flags.batch_size, flags.batch_size):
-        # getting batch
-        if len(x_train) < 2 * flags.batch_size + i:
+    for i in range(0, len(x_train), flags.batch_size):
+        if len(x_train) < flags.batch_size + i:
             x_batch = normalized_x_train[i:]
             y_batch = y_train[i:]
         else:
@@ -105,21 +82,24 @@ def train_epoch(
             continue
         # zero the gradints
         optimizer.zero_grad()
-        # prediction
-        y_batch_preds = net(x_batch.to(flags.device)).cpu()
+        # prediction, calculating morphology if needed
+        if flags.add_morphology_feature:
+            morph_data = (
+                torch.from_numpy(mu.extract_morphology_from_waveform(x_batch))
+                .float()
+                .to(flags.device)
+            )
+            y_batch_preds = net(x_batch.to(flags.device), morph_data).cpu()
+        else:
+            y_batch_preds = net(x_batch.to(flags.device)).cpu()
         denormalized_y_batch_preds = y_norm.denormalize(y_batch_preds)
         entire_epoch_preds = torch.concat(
             [entire_epoch_preds, denormalized_y_batch_preds]
         )
-        # compute waveform loss (RMSE)
-        waveform_rmse = torch_metrics.calc_RMSE(denormalized_y_batch_preds, y_batch)
-        # Compute statistical loss (RMSE)
-        label_stats = calc_stat_labels(y_batch)
-        pred_stats = calc_stat_labels(denormalized_y_batch_preds)
-        stat_rmse = torch_metrics.calc_RMSE(label_stats, pred_stats)
-        loss = waveform_rmse * 0.3 + stat_rmse * 0.7
-        # compute Pearson's R
-        pearson = torch_metrics.calc_Pearson(denormalized_y_batch_preds, y_batch)
+        # compute hybrid loss (mostly RMSE)
+        loss = torch_metrics.calc_hybrid_loss(
+            denormalized_y_batch_preds, y_batch, flags
+        )
         # backprop
         loss.backward()
         # adjust parameters
@@ -128,7 +108,7 @@ def train_epoch(
     return entire_epoch_preds, optimizer
 
 
-def train_sequnet(x_train, y_train, x_norm, y_norm, net, flags):
+def train_arterialnet(x_train, y_train, x_norm, y_norm, net, flags):
     # define optimization method
     optimizer = optim.Adam(
         net.parameters(),
@@ -143,7 +123,7 @@ def train_sequnet(x_train, y_train, x_norm, y_norm, net, flags):
         dynamic_ncols=True,
         ascii=True,
     ):
-        entire_epoch_pred, optimizer = train_epoch(
+        entire_epoch_preds, optimizer = train_epoch(
             x_train,
             y_train,
             x_norm,
@@ -155,10 +135,10 @@ def train_sequnet(x_train, y_train, x_norm, y_norm, net, flags):
         # getting average loss of this epoch
         with torch.no_grad():
             avg_loss_per_epoch.append(
-                torch_metrics.calc_RMSE(entire_epoch_pred, y_train)
+                torch_metrics.calc_RMSE(entire_epoch_preds, y_train).item()
             )
             avg_pearson_per_epoch.append(
-                torch_metrics.calc_Pearson(entire_epoch_pred, y_train)
+                torch_metrics.calc_Pearson(entire_epoch_preds, y_train).item()
             )
         # early stopping metrics
         if zu.early_stopping_trigger(
@@ -173,14 +153,14 @@ def train_sequnet(x_train, y_train, x_norm, y_norm, net, flags):
             prog_print = f"Avg RMSE={avg_loss_per_epoch[-1]:.4f}; Pearson={avg_pearson_per_epoch[-1]:.4f}"
             with torch.no_grad():
                 fig = zu.visual_pred_test(
-                    pred_arr=entire_epoch_pred[0][0],
+                    pred_arr=entire_epoch_preds[0][0],
                     test_arr=y_train[0][0],
                     x_lab="timestamp",
                     title=f"Seq-U-Net Progress for Train Patient {flags.sel_subject}({flags.subject})\nwith epoch={epoch}; "
                     + prog_print,
                     y_lab="ABP(mmHg)",
                 )
-                fig.savefig(f"pic_dir/SeqUNet_epoch{epoch}_sicong.png")
+                fig.savefig(f"pic_dir/arterialnet_epoch{epoch}_sicong.png")
             print(f"Epoch={epoch};", prog_print)
         if flags.use_wandb:
             wandb.log(
@@ -192,7 +172,7 @@ def train_sequnet(x_train, y_train, x_norm, y_norm, net, flags):
     return net
 
 
-def test_sequnet(x_test, y_test, x_norm, y_norm, net, flags):
+def test_arterialnet(x_test, y_test, x_norm, y_norm, net, flags):
     # Test setting
     with torch.no_grad():
         preds = torch.tensor([])
@@ -218,13 +198,14 @@ def test_sequnet(x_test, y_test, x_norm, y_norm, net, flags):
                 )
                 x_batch = torch.tensor(x_batch).float().to(flags.device)
             y_batch_preds = net(x_norm.normalize(x_batch).to(flags.device)).to("cpu")
-            preds = torch.cat((preds, y_norm.denormalize(y_batch_preds)), dim=0)
+            denormalized_y_batch_preds = y_norm.denormalize(y_batch_preds)
+            preds = torch.cat((preds, denormalized_y_batch_preds), dim=0)
             # compute loss
-            loss = torch_metrics.calc_RMSE(y_norm.denormalize(y_batch_preds), y_batch)
-            mae = torch_metrics.calc_MAE(y_norm.denormalize(y_batch_preds), y_batch)
+            loss = torch_metrics.calc_RMSE(denormalized_y_batch_preds, y_batch)
+            mae = torch_metrics.calc_MAE(denormalized_y_batch_preds, y_batch)
             # compute Pearson's R
             pearson = torch_metrics.calc_Pearson(
-                y_norm.denormalize(y_batch_preds), y_batch
+                denormalized_y_batch_preds, y_batch
             ).to(flags.device)
             # recording the loss and correlations
             test_loss.append(loss)
@@ -329,38 +310,45 @@ def visualization(
         )
         overall_visual_dict["SBP_Waveform"].savefig("plot_dir/SBP_visual_test.png")
         overall_visual_dict["DBP_Waveform"].savefig("plot_dir/DBP_visual_test.png")
-        print(f"ABP_RMSE=={waveform_rmse}")
-        print(f"ABP_MAE=={waveform_mae}")
-        print(f"ABP_Pearson=={waveform_pearson}")
-        print(f"SBP_RMSE=={overall_visual_dict['SBP_RMSE']}")
-        print(f"SBP_MAE=={overall_visual_dict['SBP_MAE']}")
-        print(f"SBP_Pearson=={overall_visual_dict['SBP_Pearson']}")
-        print(f"DBP_RMSE=={overall_visual_dict['DBP_RMSE']}")
-        print(f"DBP_MAE=={overall_visual_dict['DBP_MAE']}")
-        print(f"DBP_Pearson=={overall_visual_dict['DBP_Pearson']}")
+        print(f"ABP_RMSE=={waveform_rmse:.4f}")
+        print(f"ABP_MAE=={waveform_mae:.4f}")
+        print(f"ABP_Pearson=={waveform_pearson:.4f}")
+        print(f"SBP_RMSE=={overall_visual_dict['SBP_RMSE']:.4f}")
+        print(f"SBP_MAE=={overall_visual_dict['SBP_MAE']:.4f}")
+        print(f"SBP_Pearson=={overall_visual_dict['SBP_Pearson']:.4f}")
+        print(f"DBP_RMSE=={overall_visual_dict['DBP_RMSE']:.4f}")
+        print(f"DBP_MAE=={overall_visual_dict['DBP_MAE']:.4f}")
+        print(f"DBP_Pearson=={overall_visual_dict['DBP_Pearson']:.4f}")
+        print("Saved to plot_dir/")
 
 
-if __name__ == "__main__":
+def main():
     # getting arguments
-    flags = sicong_argparse("Sequnet")
+    flags = sicong_argparse()
     # extracting datasets
     print(zu.pretty_progress_bar("Loading data with MIMIC_dataloader"))
     x_train, y_train, x_test, y_test, flags = zu.MIMIC_dataloader(flags)
     # normalize data
     x_norm = zu.Sicong_Norm(x_train.detach())
     y_norm = zu.Sicong_Norm(y_train.detach())
-    # define the UNet Model as the backbone of the dilated CNN
-    print(zu.pretty_progress_bar("Initializing SeqUNet"))
-    snet = SeqUNet(
-        num_inputs=1,
-        num_channels=[1024, 512, 256, 128, 64],
-        num_outputs=1,
-    ).to(flags.device)
-    # define the dilated CNN Model that includes the UNet backbone
-    net = DilatedCNN(
-        input_size=x_train.shape[-1],
-        output_size=y_train.shape[-1],
-        use_norm=True,
+    # define the UNet Model as the backbone of the ArterialNet
+    print(zu.pretty_progress_bar("Initializing ArterialNet"))
+    if flags.seq2seq_backbone == "sequnet":
+        snet = SeqUNet(
+            num_inputs=x_train.shape[1],
+            num_channels=[1024, 512, 256, 128, 64],
+            num_outputs=1,
+        ).to(flags.device)
+    elif flags.seq2seq_backbone == "transformer":
+        snet = TransformerModel().to(flags.device)
+    else:
+        print("exception should already throw arg_parser.py")
+        raise ValueError("seq2seq_backbone must be either sequnet or transformer")
+    # define the ArterialNet Model that includes the UNet backbone
+    net = ArterialNet(
+        input_size=x_train.shape[2],
+        num_channels=x_train.shape[1],
+        output_size=y_train.shape[2],
         trained_model=snet,
     ).to(flags.device)
     # Initialize wandb if used
@@ -375,10 +363,10 @@ if __name__ == "__main__":
         )
         wandb.config.update(flags)
     log_dict = {}
-    print(zu.pretty_progress_bar("Training SeqUNet"))
-    net = train_sequnet(x_train, y_train, x_norm, y_norm, net, flags)
-    print(zu.pretty_progress_bar("Testing SeqUNet"))
-    net, preds, waveform_rmse, waveform_mae, waveform_pearson = test_sequnet(
+    print(zu.pretty_progress_bar("Training ArterialNet"))
+    net = train_arterialnet(x_train, y_train, x_norm, y_norm, net, flags)
+    print(zu.pretty_progress_bar("Testing ArterialNet"))
+    net, preds, waveform_rmse, waveform_mae, waveform_pearson = test_arterialnet(
         x_test, y_test, x_norm, y_norm, net, flags
     )
     wf_dict = reconstruct_waveform(y_test, preds)
@@ -389,7 +377,23 @@ if __name__ == "__main__":
     if flags.save_result and criteria < 10:
         model_name = (
             flags.seq_result_dir
-            + f"/sequnet_subject{flags.sel_subject}_rmse_{str(criteria)}.pt"
+            + f"/{flags.seq2seq_backbone}_subject{flags.sel_subject}_rmse_{str(criteria)}.pt"
         )
         torch.save(net, model_name)
         print("saving good results")
+    if flags.email_reminder:
+        zu.email_func(
+            subject="arterialnet_task_completed",
+            message=f"Sequence Task Completed with Commands\n{flags}",
+        )
+        print(
+            zu.pretty_progress_bar(
+                "Email sent, run_torch_arterialnet.py Script Completed"
+            )
+        )
+    else:
+        print(zu.pretty_progress_bar("run_torch_arterialnet.py Script Completed"))
+
+
+if __name__ == "__main__":
+    main()

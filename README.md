@@ -1,13 +1,26 @@
-# ArterialNet: Arterial Blood Pressure Reconstruction
-This is the code Implementation for our accepted IEEE BHI-2023 manuscript: `ArterialNet: Arterial Blood Pressure Reconstruction`.
+_The manuscript for this branch is still under review! Please use the main branch_
 
-[Link](https://doi.org/10.1109/BHI58575.2023.10313518) to publication.
+# ArterialNet (2024)
+This is the code Implementation for our submitted manuscript: `ArterialNet: Reconstructing Arterial Blood Pressure Waveform with Wearable Pulsatile Signals, a Cohort-Aware Approach`.
+
+<!-- [Link](https://doi.org/10.1109/BHI58575.2023.10313518) to publication. --> TODO: Update the link
 
 Corresponding Author: [Sicong Huang](mailto:siconghuang@tamu.edu).
 
 ## Description
 
 ArterialNet is a pre-training framework that can be paired with any deep learning sequence-to-sequence model for arterial blood pressure (ABP) reconstruction. Here we demonstrate the effectiveness of ArterialNet by pairing it with two different backbone architectures: U-Net and Transformer. We evaluated ArterialNet on the MIMIC III Waveform Dataset and showed improved performance on both U-Net and Transformer backbones. Please refer to our BHI submission {add link} for full details. 
+
+## __What's New__
+In our previous BHI'23 version, we proposed a method to reconstruct ABP waveforms, deriving precise SBP & DBP estimations using PPG or Bio-Z signals. We validated its accuracy in both in-clinic (MIMIC-III) and remote health (CTRAL BioZ) settings.
+In this extension, we have made the following improvements:
+Method Enhancements:
+- Enabled the model to compute and incorporate pulse transit time (PTT) features and tabular morphological/human-extracted features with early fusion.
+- Extended the hybrid objective function by incorporating losses from waveform reconstruction (waveform + statistical loss), correlation (normalized Pearson's R loss), and alignment (DTW-loss).
+Ablation Study:
+- Investigated the contributions of each component in ArterialNet via ablation studies.
+Robustness Analysis:
+- Discussed ArterialNet’s translational impact and robustness to data augmentations (masked pulse or reflected wave, masked BP ranges, Gaussian noise, recalibration).
 
 ## Prerequisites
 
@@ -41,7 +54,7 @@ ArterialNet has 3 major components:
 * Hybrid Loss Function
 * Subject-Invariant Regularization
 
-![Visual of ArterialNet Framework](figures/arterialnet-small.png)
+![Visual of ArterialNet Framework](figures/arterialnet24-central-fig.png)
 
 ### ArterialNet Framework
 
@@ -53,17 +66,30 @@ ArterialNet has 3 major components:
 
 * Subject-Invariant Regularization is implemented in a custom [`rex_preprocess()`](https://github.com/stmilab/ArterialNet/blob/main/utils/rex_utils.py#L18) in `utils/rex_utils.py` and modified from [REx](https://github.com/capybaralet/REx_code_release)
 
-### Training and Testing
-* `python run_torch_sequnet_rex.py` runs the ArterialNet + U-Net model on MIMIC III Waveform Dataset (see below for more details)
+### Training and Testing (__updated__)
+_We integrated both backbones into one script to minimize redundancy._
+* `python run_torch_arterialnet_rex.py` runs the ArterialNet with your backbone model 
+* `python run_torch_sequnet.py` is the base version without subject-invariant regularization 
 
-#### Experiment: ArterialNet + U-Net on MIMIC 
-`run_torch_sequnet_rex.py` is the implementation of ArterialNet with U-Net as the backbone for reconstructing ABP for MIMIC patients
+#### Example: ArterialNet + Transformer
+`run_torch_arterialnet_rex.py --seq2seq_backbone transformer` is the implementation of ArterialNet with transformer as the backbone for reconstructing ABP
 
-`run_torch_sequnet.py` is the base version without subject-invariant regularization 
-#### Experiment: ArterialNet + Transformer on MIMIC 
-`run_torch_transformer_rex.py` is the implementation of ArterialNet with Transformer as the backbone for reconstructing ABP for MIMIC patients
+### Ablation (__new__)
+_We have included implementations for the following ablations to evaluate robustness_
+[
+    `shrink_data_size`,
+    `hide_bp_range`,
+    `domain_segmentor`,
+    `gaussian_noise`,
+    `mask_first_half`,
+    `mask_last_half`,
+    `mask_current_beat`,
+    `mask_prev_beat`,
+    `calibration_time`,
+]
+#### Example: ArterialNet + Transformer + ablation on gaussian noise
 
-`run_torch_transformer.py` is the base version without subject-invariant regularization 
+* `python run_torch_arterialnet_rex.py --seq2seq_backbone transformer --ablation_type gaussian_noise --gaussian_noise_rate 0.5` runs the ArterialNet with transformer as the backbone for reconstructing ABP with ablation study enabled
 
 ### Hyperparameter Tuning
 
