@@ -1,4 +1,4 @@
-_The manuscript for this branch is still under review! Please use the main branch_
+_This branch pertains to an extension manuscript that is currently under review. For the implementation of the accepted version, please refer to the main branch._
 
 # ArterialNet (2024)
 This is the code Implementation for our submitted manuscript: `ArterialNet: Reconstructing Arterial Blood Pressure Waveform with Wearable Pulsatile Signals, a Cohort-Aware Approach`.
