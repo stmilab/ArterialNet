@@ -97,7 +97,6 @@ class Feature_Extractor(nn.Module):
 
 
 class ArterialNet(nn.Module):
-    # TODO: adding layer and group norm? maybe?
     def __init__(
         self,
         input_size,
