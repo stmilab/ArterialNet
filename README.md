@@ -3,13 +3,13 @@ _This branch pertains to the implementation of an extension manuscript that is c
 # ArterialNet (2024)
 This is the code Implementation for our submitted manuscript: `ArterialNet: Reconstructing Arterial Blood Pressure Waveform with Wearable Pulsatile Signals, a Cohort-Aware Approach`.
 
-<!-- [Link](https://doi.org/10.1109/BHI58575.2023.10313518) to publication. --> TODO: Update the link
+[arxiv link](https://arxiv.org/pdf/2410.18895?) to arxiv.
 
 Corresponding Author: [Sicong Huang](mailto:siconghuang@tamu.edu).
 
 ## Description
 
-ArterialNet is a pre-training framework that can be paired with any deep learning sequence-to-sequence model for arterial blood pressure (ABP) reconstruction. Here we demonstrate the effectiveness of ArterialNet by pairing it with two different backbone architectures: U-Net and Transformer. We evaluated ArterialNet on the MIMIC III Waveform Dataset and showed improved performance on both U-Net and Transformer backbones. Please refer to our BHI submission [Link](https://doi.org/10.1109/BHI58575.2023.10313518) for full details. 
+ArterialNet is a pre-training framework that can be paired with any deep learning sequence-to-sequence model for arterial blood pressure (ABP) reconstruction. Here we demonstrate the effectiveness of ArterialNet by pairing it with two different backbone architectures: U-Net and Transformer. We evaluated ArterialNet on the MIMIC III Waveform Dataset and showed improved performance on both U-Net and Transformer backbones. Please refer to our arxiv [paper](https://arxiv.org/pdf/2410.18895?) for full details. 
 
 ## __What's New__
 In our previous BHI'23 version, we proposed a method to reconstruct ABP waveforms, deriving precise SBP & DBP estimations using PPG or Bio-Z signals. We validated its accuracy in both in-clinic (MIMIC-III) and remote health (CTRAL BioZ) settings.
