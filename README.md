@@ -3,7 +3,7 @@ _This branch pertains to the implementation of an extension manuscript that is c
 # ArterialNet (2024)
 This is the code Implementation for our submitted manuscript: `ArterialNet: Reconstructing Arterial Blood Pressure Waveform with Wearable Pulsatile Signals, a Cohort-Aware Approach`.
 
-[arxiv link](https://arxiv.org/pdf/2410.18895?) to arxiv.
+[link](https://arxiv.org/pdf/2410.18895?) to arxiv.
 
 Corresponding Author: [Sicong Huang](mailto:siconghuang@tamu.edu).
 
